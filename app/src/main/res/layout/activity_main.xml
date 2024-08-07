@@ -1,133 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
-    <Spinner
-        android:id="@+id/year_spinner"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:spinnerMode="dropdown" />
+        android:orientation="vertical">
 
-    <Spinner
-        android:id="@+id/month_spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:spinnerMode="dropdown" />
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Заработная плата">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/salary"
+        <Spinner
+            android:id="@+id/year_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:spinnerMode="dropdown" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Часы в месяц">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/monthly_hours"
+        <Spinner
+            android:id="@+id/month_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:spinnerMode="dropdown" />
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Пропущенные часы">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/missed_hours"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:hint="Оклад">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Процент надбавок">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/salary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/allowances_percentage"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:hint="Часы в месяц">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Процент месячной премии">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/monthly_hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/monthly_bonus_percentage"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:hint="Пропущенные часы">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Премия руководителя">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/missed_hours"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/manager_bonus"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="numberDecimal" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:hint="Процент надбавок">
 
-    <TextView
-        android:id="@+id/worked_hours_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Отработанные часы: 0.0" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/allowances_percentage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/overtime_first_2_hours_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Сверхурочные (первые 2 часа): 0.0" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Процент месячной премии">
 
-    <TextView
-        android:id="@+id/overtime_more_than_2_hours_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Сверхурочные (более 2 часов): 0.0" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/monthly_bonus_percentage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <TextView
-        android:id="@+id/weekend_hours_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Часы работы в выходные дни: 0.0" />
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Премия руководителя">
 
-    <Button
-        android:id="@+id/calendar_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Выбрать даты" />
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/manager_bonus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal" />
+        </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/calculate_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Рассчитать" />
+        <TextView
+            android:id="@+id/worked_hours_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Отработанные часы: 0.0" />
 
-    <TextView
-        android:id="@+id/result_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Результат" />
-</LinearLayout>
+        <TextView
+            android:id="@+id/overtime_first_2_hours_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Сверхурочные (первые 2 часа): 0.0" />
+
+        <TextView
+            android:id="@+id/overtime_more_than_2_hours_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Сверхурочные (более 2 часов): 0.0" />
+
+        <TextView
+            android:id="@+id/weekend_hours_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Часы работы в выходные дни: 0.0" />
+
+        <Button
+            android:id="@+id/calendar_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Выбрать даты" />
+
+        <Button
+            android:id="@+id/calculate_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Рассчитать" />
+
+        <TextView
+            android:id="@+id/result_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Результат" />
+
+    </LinearLayout>
+</ScrollView>

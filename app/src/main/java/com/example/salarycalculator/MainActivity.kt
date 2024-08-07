@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         weekendHoursText = findViewById(R.id.weekend_hours_text)
 
         setupSpinners()
+        loadPreferences() // Load saved preferences
 
         calendarButton.setOnClickListener {
             openCalendar()
@@ -135,8 +136,8 @@ class MainActivity : AppCompatActivity() {
 
         // Расчет пропорциональной зарплаты
         val proportionalSalary = salary * ((monthlyHours - missedHours) / monthlyHours)
-        val hourlyRate = salary / monthlyHours
-        val proportionalhourlyRate = (proportionalSalary / monthlyHours) + ((proportionalSalary / monthlyHours)* allowancesPercentage / 100)
+        val hourlyRate = proportionalSalary / monthlyHours + ((proportionalSalary / workedHours)* allowancesPercentage / 100)
+        val proportionalhourlyRate = (proportionalSalary / workedHours) + ((proportionalSalary / workedHours)* allowancesPercentage / 100)
 
         // Расчет отработанных часов
         val regularPay = hourlyRate * (monthlyHours - missedHours)
@@ -158,10 +159,10 @@ class MainActivity : AppCompatActivity() {
         val netSalary = totalEarnings - taxDeduction - unionFeeDeduction
 
         resultText.text = """
-            Пропорциональная зарплата: %.2f руб.
+            Оклад: %.2f руб.
             Надбавки: %.2f руб.
             Ежемесячная премия: %.2f руб.
-            Бонус менеджера: %.2f руб.
+            Премия руководителя: %.2f руб.
             Оплата сверхурочных (первые 2 часа): %.2f руб.
             Оплата сверхурочных (более 2 часов): %.2f руб.
             Оплата за работу в выходные: %.2f руб.
@@ -189,5 +190,35 @@ class MainActivity : AppCompatActivity() {
         if (requestCode == REQUEST_CODE_WORK_DETAILS && resultCode == RESULT_OK) {
             calculateSalary()
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        savePreferences() // Save preferences when the activity is paused
+    }
+
+    private fun savePreferences() {
+        val editor = sharedPreferences.edit()
+        editor.putInt("selected_year", selectedYear)
+        editor.putInt("selected_month", selectedMonth)
+        editor.putString("salary", salaryInput.text.toString())
+        editor.putString("monthly_hours", monthlyHoursInput.text.toString())
+        editor.putString("missed_hours", missedHoursInput.text.toString())
+        editor.putString("allowances_percentage", allowancesPercentageInput.text.toString())
+        editor.putString("monthly_bonus_percentage", monthlyBonusPercentageInput.text.toString())
+        editor.putString("manager_bonus", managerBonusInput.text.toString())
+        editor.apply()
+    }
+
+    private fun loadPreferences() {
+        selectedYear = sharedPreferences.getInt("selected_year", Calendar.getInstance().get(Calendar.YEAR))
+        selectedMonth = sharedPreferences.getInt("selected_month", Calendar.getInstance().get(Calendar.MONTH) + 1) // MONTH is 0-based
+
+        salaryInput.setText(sharedPreferences.getString("salary", ""))
+        monthlyHoursInput.setText(sharedPreferences.getString("monthly_hours", ""))
+        missedHoursInput.setText(sharedPreferences.getString("missed_hours", ""))
+        allowancesPercentageInput.setText(sharedPreferences.getString("allowances_percentage", ""))
+        monthlyBonusPercentageInput.setText(sharedPreferences.getString("monthly_bonus_percentage", ""))
+        managerBonusInput.setText(sharedPreferences.getString("manager_bonus", ""))
     }
 }
