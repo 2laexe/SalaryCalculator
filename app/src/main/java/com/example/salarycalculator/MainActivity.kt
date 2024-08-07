@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity() {
 
         val totalEarnings = proportionalSalary + allowances + monthlyBonus + managerBonus + overtimeFirst2HoursPay + overtimeMoreThan2HoursPay + weekendWorkPay
         val taxDeduction = totalEarnings * TAX_RATE
-        val unionFeeDeduction = salary * UNION_FEE
+        val unionFeeDeduction = totalEarnings * UNION_FEE
 
         val netSalary = totalEarnings - taxDeduction - unionFeeDeduction
 
