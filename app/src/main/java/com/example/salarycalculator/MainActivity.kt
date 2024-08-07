@@ -1,6 +1,5 @@
 package com.example.salarycalculator
 
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -15,179 +14,180 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var yearSpinner: Spinner
     private lateinit var monthSpinner: Spinner
+    private lateinit var salaryInput: TextInputEditText
+    private lateinit var monthlyHoursInput: TextInputEditText
+    private lateinit var missedHoursInput: TextInputEditText
+    private lateinit var allowancesPercentageInput: TextInputEditText
+    private lateinit var monthlyBonusPercentageInput: TextInputEditText
+    private lateinit var managerBonusInput: TextInputEditText
+    private lateinit var calculateButton: Button
+    private lateinit var workedHoursText: TextView
+    private lateinit var resultText: TextView
+    private lateinit var calendarButton: Button
+    private lateinit var overtimeFirst2HoursText: TextView
+    private lateinit var overtimeMoreThan2HoursText: TextView
+    private lateinit var weekendHoursText: TextView
+
+    private var selectedYear: Int = 0
+    private var selectedMonth: Int = 0
+
     private val TAX_RATE = 0.13
     private val UNION_FEE = 0.01
     private val REQUEST_CODE_WORK_DETAILS = 1
-    private val workDetails = mutableMapOf<String, WorkDetail>()
-
-    data class WorkDetail(
-        var overtimeFirst2Hours: Double,
-        var overtimeMoreThan2Hours: Double,
-        var weekendHours: Double
-    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Инициализация SharedPreferences
         sharedPreferences = getSharedPreferences("SalaryPrefs", MODE_PRIVATE)
 
-        // Инициализация Spinner для выбора года
         yearSpinner = findViewById(R.id.year_spinner)
-        val years = arrayOf(2023, 2024, 2025, 2026, 2027)
-        val yearAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, years)
-        yearAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        yearSpinner.adapter = yearAdapter
-
-        // Инициализация Spinner для выбора месяца
         monthSpinner = findViewById(R.id.month_spinner)
-        val months = arrayOf("Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь")
-        val monthAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, months)
-        monthAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        monthSpinner.adapter = monthAdapter
+        salaryInput = findViewById(R.id.salary)
+        monthlyHoursInput = findViewById(R.id.monthly_hours)
+        missedHoursInput = findViewById(R.id.missed_hours)
+        allowancesPercentageInput = findViewById(R.id.allowances_percentage)
+        monthlyBonusPercentageInput = findViewById(R.id.monthly_bonus_percentage)
+        managerBonusInput = findViewById(R.id.manager_bonus)
+        calculateButton = findViewById(R.id.calculate_button)
+        workedHoursText = findViewById(R.id.worked_hours_text)
+        resultText = findViewById(R.id.result_text)
+        calendarButton = findViewById(R.id.calendar_button)
+        overtimeFirst2HoursText = findViewById(R.id.overtime_first_2_hours_text)
+        overtimeMoreThan2HoursText = findViewById(R.id.overtime_more_than_2_hours_text)
+        weekendHoursText = findViewById(R.id.weekend_hours_text)
 
-        // Инициализация других элементов
-        val salaryInput = findViewById<TextInputEditText>(R.id.salary)
-        val monthlyHoursInput = findViewById<TextInputEditText>(R.id.monthly_hours)
-        val missedHoursInput = findViewById<TextInputEditText>(R.id.missed_hours)
-        val allowancesPercentageInput = findViewById<TextInputEditText>(R.id.allowances_percentage)
-        val monthlyBonusPercentageInput = findViewById<TextInputEditText>(R.id.monthly_bonus_percentage)
-        val managerBonusInput = findViewById<TextInputEditText>(R.id.manager_bonus)
-        val calculateButton = findViewById<Button>(R.id.calculate_button)
-        val resultText = findViewById<TextView>(R.id.result_text)
-        val workedHoursText = findViewById<TextView>(R.id.worked_hours_text)
-        val calendarButton = findViewById<Button>(R.id.calendar_button)
-        val overtimeFirst2HoursText = findViewById<TextView>(R.id.overtime_first_2_hours_text)
-        val overtimeMoreThan2HoursText = findViewById<TextView>(R.id.overtime_more_than_2_hours_text)
-        val weekendHoursText = findViewById<TextView>(R.id.weekend_hours_text)
+        setupSpinners()
 
         calendarButton.setOnClickListener {
-            showDatePicker()
+            openCalendar()
         }
 
         calculateButton.setOnClickListener {
             calculateSalary()
         }
+    }
+
+    private fun setupSpinners() {
+        val currentYear = Calendar.getInstance().get(Calendar.YEAR)
+        val years = (currentYear - 10..currentYear + 10).toList()
+        val months = (1..12).map { it.toString() }
+
+        yearSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, years)
+        monthSpinner.adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, months)
+
+        yearSpinner.setSelection(years.indexOf(currentYear))
+        monthSpinner.setSelection(Calendar.getInstance().get(Calendar.MONTH))
 
         yearSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                updateFieldsForSelectedMonthAndYear()
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                selectedYear = years[position]
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Do nothing
+            }
         }
 
         monthSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                updateFieldsForSelectedMonthAndYear()
+            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
+                selectedMonth = months[position].toInt()
             }
 
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // Do nothing
+            }
         }
     }
 
-    private fun showDatePicker() {
-        val calendar = Calendar.getInstance()
-        val year = calendar.get(Calendar.YEAR)
-        val month = calendar.get(Calendar.MONTH)
-        val day = calendar.get(Calendar.DAY_OF_MONTH)
+    private fun openCalendar() {
+        val intent = Intent(this, WorkDetailsActivity::class.java)
+        intent.putExtra("year", selectedYear)
+        intent.putExtra("month", selectedMonth)
+        startActivityForResult(intent, REQUEST_CODE_WORK_DETAILS)
+    }
 
-        val datePickerDialog = DatePickerDialog(this, { _, selectedYear, selectedMonth, selectedDay ->
-            val selectedDate = "$selectedYear-${selectedMonth + 1}-$selectedDay"
-            val intent = Intent(this, WorkDetailsActivity::class.java)
-            intent.putExtra("selected_date", selectedDate)
-            startActivityForResult(intent, REQUEST_CODE_WORK_DETAILS)
-        }, year, month, day)
+    private fun calculateSalary() {
+        val salary = salaryInput.text.toString().toDoubleOrNull() ?: 0.0
+        val monthlyHours = monthlyHoursInput.text.toString().toDoubleOrNull() ?: 0.0
+        val missedHours = missedHoursInput.text.toString().toDoubleOrNull() ?: 0.0
+        val allowancesPercentage = allowancesPercentageInput.text.toString().toDoubleOrNull() ?: 0.0
+        val monthlyBonusPercentage = monthlyBonusPercentageInput.text.toString().toDoubleOrNull() ?: 0.0
+        val managerBonus = managerBonusInput.text.toString().toDoubleOrNull() ?: 0.0
 
-        datePickerDialog.show()
+        var overtimeFirst2Hours = 0.0
+        var overtimeMoreThan2Hours = 0.0
+        var weekendWorkHours = 0.0
+
+        for (day in 1..31) {
+            val dateKey = "$selectedYear-${String.format("%02d", selectedMonth)}-${String.format("%02d", day)}"
+            overtimeFirst2Hours += sharedPreferences.getFloat("${dateKey}_overtime_first_2_hours", 0.0f).toDouble()
+            overtimeMoreThan2Hours += sharedPreferences.getFloat("${dateKey}_overtime_more_than_2_hours", 0.0f).toDouble()
+            weekendWorkHours += sharedPreferences.getFloat("${dateKey}_weekend_hours", 0.0f).toDouble()
+        }
+
+        overtimeFirst2HoursText.text = "Сверхурочные (первые 2 часа): $overtimeFirst2Hours"
+        overtimeMoreThan2HoursText.text = "Сверхурочные (более 2 часов): $overtimeMoreThan2Hours"
+        weekendHoursText.text = "Часы работы в выходные дни: $weekendWorkHours"
+
+        val workedHours = monthlyHours - missedHours + overtimeFirst2Hours + overtimeMoreThan2Hours
+        workedHoursText.text = "Отработанные часы: $workedHours"
+
+        // Расчет пропорциональной зарплаты
+        val proportionalSalary = salary * ((monthlyHours - missedHours) / monthlyHours)
+        val hourlyRate = salary / monthlyHours
+        val proportionalhourlyRate = (proportionalSalary / monthlyHours) + ((proportionalSalary / monthlyHours)* allowancesPercentage / 100)
+
+        // Расчет отработанных часов
+        val regularPay = hourlyRate * (monthlyHours - missedHours)
+        val proportionalSalary2 = salary * ((workedHours ) / monthlyHours)
+
+        // Расчет надбавок и премий на основе пропорционального оклада
+        val allowances = (allowancesPercentage / 100) * proportionalSalary2
+        val monthlyBonus = (monthlyBonusPercentage / 100) * proportionalSalary2
+
+        // Расчет переработок и работы в выходные на основе пропорционального оклада
+        val overtimeFirst2HoursPay = overtimeFirst2Hours * proportionalhourlyRate * 1.5 // Часы переработки (первые 2 часа)
+        val overtimeMoreThan2HoursPay = overtimeMoreThan2Hours  * proportionalhourlyRate * 2.0 // Часы переработки (более 2 часов)
+        val weekendWorkPay = weekendWorkHours * proportionalhourlyRate  * 2.0 // Часы работы в выходные
+
+        val totalEarnings = proportionalSalary + allowances + monthlyBonus + managerBonus + overtimeFirst2HoursPay + overtimeMoreThan2HoursPay + weekendWorkPay
+        val taxDeduction = totalEarnings * TAX_RATE
+        val unionFeeDeduction = salary * UNION_FEE
+
+        val netSalary = totalEarnings - taxDeduction - unionFeeDeduction
+
+        resultText.text = """
+            Пропорциональная зарплата: %.2f руб.
+            Надбавки: %.2f руб.
+            Ежемесячная премия: %.2f руб.
+            Бонус менеджера: %.2f руб.
+            Оплата сверхурочных (первые 2 часа): %.2f руб.
+            Оплата сверхурочных (более 2 часов): %.2f руб.
+            Оплата за работу в выходные: %.2f руб.
+            Общий доход до налогов: %.2f руб.
+            Налоги: %.2f руб.
+            Профсоюзный взнос: %.2f руб.
+            Чистый доход: %.2f руб.
+        """.trimIndent().format(
+            proportionalSalary,
+            allowances,
+            monthlyBonus,
+            managerBonus,
+            overtimeFirst2HoursPay,
+            overtimeMoreThan2HoursPay,
+            weekendWorkPay,
+            totalEarnings,
+            taxDeduction,
+            unionFeeDeduction,
+            netSalary
+        )
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == REQUEST_CODE_WORK_DETAILS && resultCode == RESULT_OK) {
-            data?.let {
-                val selectedDate = it.getStringExtra("selected_date")
-                val overtimeFirst2Hours = it.getStringExtra("overtime_first_2_hours")?.toDoubleOrNull() ?: 0.0
-                val overtimeMoreThan2Hours = it.getStringExtra("overtime_more_than_2_hours")?.toDoubleOrNull() ?: 0.0
-                val weekendHours = it.getStringExtra("weekend_hours")?.toDoubleOrNull() ?: 0.0
-
-                if (selectedDate != null) {
-                    workDetails[selectedDate] = WorkDetail(overtimeFirst2Hours, overtimeMoreThan2Hours, weekendHours)
-                    updateWorkDetailsSummary()
-                }
-            }
+            calculateSalary()
         }
-    }
-
-    private fun updateWorkDetailsSummary() {
-        var totalOvertimeFirst2Hours = 0.0
-        var totalOvertimeMoreThan2Hours = 0.0
-        var totalWeekendHours = 0.0
-
-        for (workDetail in workDetails.values) {
-            totalOvertimeFirst2Hours += workDetail.overtimeFirst2Hours
-            totalOvertimeMoreThan2Hours += workDetail.overtimeMoreThan2Hours
-            totalWeekendHours += workDetail.weekendHours
-        }
-
-        findViewById<TextView>(R.id.overtime_first_2_hours_text).text = "Сверхурочные первые 2 часа: $totalOvertimeFirst2Hours"
-        findViewById<TextView>(R.id.overtime_more_than_2_hours_text).text = "Сверхурочные свыше 2 часов: $totalOvertimeMoreThan2Hours"
-        findViewById<TextView>(R.id.weekend_hours_text).text = "Часы работы в выходные: $totalWeekendHours"
-    }
-
-    private fun updateFieldsForSelectedMonthAndYear() {
-        val year = yearSpinner.selectedItem.toString()
-        val month = monthSpinner.selectedItemPosition + 1
-
-        val key = "$year-$month"
-        val salary = sharedPreferences.getString("${key}_salary", "") ?: ""
-        val monthlyHours = sharedPreferences.getString("${key}_monthly_hours", "") ?: ""
-        val missedHours = sharedPreferences.getString("${key}_missed_hours", "") ?: ""
-        val allowancesPercentage = sharedPreferences.getString("${key}_allowances_percentage", "") ?: ""
-        val monthlyBonusPercentage = sharedPreferences.getString("${key}_monthly_bonus_percentage", "") ?: ""
-        val managerBonus = sharedPreferences.getString("${key}_manager_bonus", "") ?: ""
-
-        findViewById<TextInputEditText>(R.id.salary).setText(salary)
-        findViewById<TextInputEditText>(R.id.monthly_hours).setText(monthlyHours)
-        findViewById<TextInputEditText>(R.id.missed_hours).setText(missedHours)
-        findViewById<TextInputEditText>(R.id.allowances_percentage).setText(allowancesPercentage)
-        findViewById<TextInputEditText>(R.id.monthly_bonus_percentage).setText(monthlyBonusPercentage)
-        findViewById<TextInputEditText>(R.id.manager_bonus).setText(managerBonus)
-
-        updateWorkDetailsSummary()
-    }
-
-    private fun calculateSalary() {
-        val salaryInput = findViewById<TextInputEditText>(R.id.salary).text.toString().toDoubleOrNull() ?: return
-        val monthlyHoursInput = findViewById<TextInputEditText>(R.id.monthly_hours).text.toString().toDoubleOrNull() ?: return
-        val missedHoursInput = findViewById<TextInputEditText>(R.id.missed_hours).text.toString().toDoubleOrNull() ?: return
-        val allowancesPercentageInput = findViewById<TextInputEditText>(R.id.allowances_percentage).text.toString().toDoubleOrNull() ?: return
-        val monthlyBonusPercentageInput = findViewById<TextInputEditText>(R.id.monthly_bonus_percentage).text.toString().toDoubleOrNull() ?: return
-        val managerBonusInput = findViewById<TextInputEditText>(R.id.manager_bonus).text.toString().toDoubleOrNull() ?: return
-
-        var totalOvertimeFirst2Hours = 0.0
-        var totalOvertimeMoreThan2Hours = 0.0
-        var totalWeekendHours = 0.0
-
-        for (workDetail in workDetails.values) {
-            totalOvertimeFirst2Hours += workDetail.overtimeFirst2Hours
-            totalOvertimeMoreThan2Hours += workDetail.overtimeMoreThan2Hours
-            totalWeekendHours += workDetail.weekendHours
-        }
-
-        val totalWorkedHours = monthlyHoursInput - missedHoursInput
-        val allowances = salaryInput * (allowancesPercentageInput / 100)
-        val monthlyBonus = salaryInput * (monthlyBonusPercentageInput / 100)
-        val overtimeFirst2 = totalOvertimeFirst2Hours * 1.5
-        val overtimeMoreThan2 = totalOvertimeMoreThan2Hours * 2.0
-        val weekendWork = totalWeekendHours * 2.0
-
-        val totalSalary = salaryInput + allowances + monthlyBonus + managerBonusInput +
-                overtimeFirst2 + overtimeMoreThan2 + weekendWork
-        val taxedSalary = totalSalary - (totalSalary * TAX_RATE) - (totalSalary * UNION_FEE)
-
-        findViewById<TextView>(R.id.result_text).text = "Итоговая зарплата: $taxedSalary"
-        findViewById<TextView>(R.id.worked_hours_text).text = "Отработанные часы: $totalWorkedHours"
     }
 }

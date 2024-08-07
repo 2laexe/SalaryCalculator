@@ -1,58 +1,58 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
     tools:context=".WorkDetailsActivity">
 
     <TextView
-        android:id="@+id/work_details_header"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Введите данные о работе"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp"
-        android:layout_centerHorizontal="true" />
+        android:text="Сверхурочные (первые 2 часа)"
+        android:paddingTop="8dp" />
 
-    <com.google.android.material.textfield.TextInputEditText
+    <EditText
         android:id="@+id/overtime_first_2_hours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Сверхурочные первые 2 часа"
-        android:inputType="numberDecimal"
-        android:layout_below="@id/work_details_header"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
+        android:inputType="numberDecimal" />
 
-    <com.google.android.material.textfield.TextInputEditText
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Сверхурочные (более 2 часов)"
+        android:paddingTop="8dp" />
+
+    <EditText
         android:id="@+id/overtime_more_than_2_hours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Сверхурочные свыше 2 часов"
-        android:inputType="numberDecimal"
-        android:layout_below="@id/overtime_first_2_hours"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
+        android:inputType="numberDecimal" />
 
-    <com.google.android.material.textfield.TextInputEditText
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Часы работы в выходные дни"
+        android:paddingTop="8dp" />
+
+    <EditText
         android:id="@+id/weekend_hours"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Часы работы в выходные"
-        android:inputType="numberDecimal"
-        android:layout_below="@id/overtime_more_than_2_hours"
-        android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp" />
+        android:inputType="numberDecimal" />
+
+    <CalendarView
+        android:id="@+id/calendar_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" />
 
     <Button
         android:id="@+id/save_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Сохранить"
-        android:layout_below="@id/weekend_hours"
-        android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp" />
-
-</RelativeLayout>
+</LinearLayout>
