@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Стиль приложения -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Основной цвет фона -->
+        <item name="android:windowBackground">@drawable/back</item>
+    </style>
+</resources>
