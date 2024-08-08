@@ -1,59 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    tools:context=".WorkDetailsActivity">
+    android:padding="16dp">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Сверхурочные (первые 2 часа)"
-        android:paddingTop="8dp" />
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-    <EditText
-        android:id="@+id/overtime_first_2_hours"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal" />
+        <TextView
+            android:id="@+id/date_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Выберите дату"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_marginBottom="16dp" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Сверхурочные (более 2 часов)"
-        android:paddingTop="8dp" />
+        <Button
+            android:id="@+id/date_picker_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Выбрать дату"
+            android:layout_marginBottom="16dp" />
 
-    <EditText
-        android:id="@+id/overtime_more_than_2_hours"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal" />
+        <!-- Сверхурочные (первые 2 часа) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Сверхурочные (первые 2 часа)"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Часы работы в выходные дни"
-        android:paddingTop="8dp" />
+        <EditText
+            android:id="@+id/overtime_first_1_hours_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="Введите количество часов до 6" />
 
-    <EditText
-        android:id="@+id/weekend_hours"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="numberDecimal" />
+        <EditText
+            android:id="@+id/overtime_first_2_hours_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="Введите количество часов до 7" />
 
-    <CalendarView
-        android:id="@+id/calendar_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp" />
+        <!-- Сверхурочные (более 2 часов) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Сверхурочные (более 2 часов)"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"/>
 
-    <Button
-        android:id="@+id/save_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Сохранить"
-        android:layout_marginTop="16dp" />
+        <EditText
+            android:id="@+id/overtime_more_than_2_hours_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="Введите количество часов" />
 
-</LinearLayout>
+        <!-- Часы работы в выходные дни -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Часы работы в выходные дни"
+            android:textSize="16sp"
+            android:layout_marginTop="16dp"/>
+
+        <EditText
+            android:id="@+id/weekend_hours_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="numberDecimal"
+            android:hint="Введите количество часов" />
+
+        <Button
+            android:id="@+id/save_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Сохранить"
+            android:layout_marginTop="16dp" />
+    </LinearLayout>
+</ScrollView>
